@@ -1,0 +1,119 @@
+# !pip install selenium
+# !pip install beautifulsoup4
+# !pip install fake_useragent
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+import pandas as pd
+from lxml import html
+import requests
+from bs4 import BeautifulSoup
+import random
+
+# so you don't get flagged as a bot
+from fake_useragent import UserAgent
+
+# for captcha clicking
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+
+location_of_chrome_driver = 'chromedriver' # I keep it local
+location_of_buster_chrome_extension = 'Buster_-Captcha-Solver-for-Humans_v1.2.2.crx' # I keep it local
+website_to_visit = 'https://prolifewhistleblower.com/anonymous-form/'
+
+def launch_browser():
+    '''this launches a browser session with random user agent string,
+    auto-clicks on the captcha, uses buster extension to solve captcha'''
+    
+    # Set up chrome before launch
+    options = webdriver.ChromeOptions() 
+    options.add_argument("start-maximized")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+
+    # get buster extension working using https://stackoverflow.com/questions/34222412/load-chrome-extension-using-selenium
+    options.add_extension(location_of_buster_chrome_extension) 
+
+    # get set up with random fake useragent string thanks to https://stackoverflow.com/questions/49565042/way-to-change-google-chrome-user-agent-in-selenium/49565254#49565254
+    ua = UserAgent()
+    userAgent = ua.random
+    print(userAgent)
+    options.add_argument(f'user-agent={userAgent}')
+
+    #loads options and launches browser
+    driver = webdriver.Chrome(options=options, executable_path=location_of_chrome_driver)
+    driver.get(website_to_visit)
+    
+    # opens new tab to check IP
+    # driver.execute_script("window.open('https://www.google.com/search?q=whats+my+ip');")
+
+def captcha_solver():
+    WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.CSS_SELECTOR,"iframe[name^='a-'][src^='https://www.google.com/recaptcha/api2/anchor?']")))
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//span[@id='recaptcha-anchor']"))).click()
+#     captcha_solver = driver.find_element_by_xpath('//*[@id="solver-button"]')
+#     captcha_solver.click()
+    
+def elected_2_office():
+    elected_2_office = driver.find_element_by_xpath('//*[@id="checkbox-1"]/div/label[2]/span[1]')
+    elected_2_office.click()
+
+def what_had_happened_was(story):
+    what_had_happened_was = driver.find_element_by_xpath('//*[@id="forminator-field-textarea-1"]')
+    what_had_happened_was.send_keys(story)
+
+def howd_u_get_evidence(evidence):
+    howd_u_get_evidence = driver.find_element_by_xpath('//*[@id="forminator-field-text-1"]')
+    howd_u_get_evidence.send_keys(evidence)
+    
+def which_clinic_or_doctor(doctor):
+    which_clinic_or_doctor = driver.find_element_by_xpath('//*[@id="forminator-field-text-6"]')
+    which_clinic_or_doctor.send_keys(doctor)
+    
+def da_city(da_city):
+    da_city = driver.find_element_by_xpath('//*[@id="forminator-field-text-2"]')
+    da_city.send_keys(da_city)
+    
+def state():
+    state = driver.find_element_by_xpath('//*[@id="forminator-field-text-3"]')
+    state.send_keys('TX')
+
+def zipcode(zipcode):
+    zipcode = driver.find_element_by_xpath('//*[@id="forminator-field-text-4"]')
+    zipcode.send_keys(zipcode)
+    
+def county(county):
+    county = driver.find_element_by_xpath('//*[@id="forminator-field-text-5"]')
+    county.send_keys(county)
+    
+def submit_button():
+    submit_button = driver.find_element_by_xpath('//*[@id="recaptcha-anchor"]/div[1]')
+    submit_button.click()
+
+def get_random_tx_place():
+    '''gets random place of the 2390 zipcodes in csv from
+    https://www.downloadexcelfiles.com/us_en/download-list-zip-codes-texas-state#.YTIbpNOA7zc'''
+    x = texas_places[random.randint(0,2391)]
+    return x
+
+
+# delete all but zip, city, county columns, then save as csv
+df = pd.read_csv('zip-city-county_for_TX.csv') # https://www.downloadexcelfiles.com/us_en/download-list-zip-codes-texas-state#.YTIbpNOA7zc
+texas_places = list(df[['zip', 'City', 'County Name']].itertuples(index=False, name=None)) 
+
+zipcode, city, county = get_random_tx_place()
+city = city.lower().capitalize()
+county = county.lower().capitalize()
+print(f'{city = }, {county = }, {zipcode = }')
+
+launch_browser()
+what_had_happened_was('they dumb')
+howd_u_get_evidence('overheard it in the coffee shop')
+which_clinic_or_doctor('Stevie Wonder')
+state()
+elected_2_office()
+captcha_solver()
+
+
