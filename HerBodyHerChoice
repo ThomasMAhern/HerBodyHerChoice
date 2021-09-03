@@ -22,7 +22,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 location_of_chrome_driver = 'chromedriver' # I keep it local
 location_of_buster_chrome_extension = 'Buster_-Captcha-Solver-for-Humans_v1.2.2.crx' # I keep it local
-website_to_visit = 'https://prolifewhistleblower.com/anonymous-form/'
+website_to_visit = 'anonymous-website'
 
 def launch_browser():
     '''this launches a browser session with random user agent string,
