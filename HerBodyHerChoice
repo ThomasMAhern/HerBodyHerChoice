@@ -2,25 +2,23 @@
 # !pip install beautifulsoup4
 # !pip install fake_useragent
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+import random
+import requests
 import time
 import pandas as pd
 from lxml import html
-import requests
 from bs4 import BeautifulSoup
-import random
-
 # so you don't get flagged as a bot
 from fake_useragent import UserAgent
-
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 # for captcha clicking
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 
-location_of_chrome_driver = 'chromedriver' # I keep it local
+location_of_chrome_driver = '/chromedriver' # I keep it local
 location_of_buster_chrome_extension = 'Buster_-Captcha-Solver-for-Humans_v1.2.2.crx' # I keep it local
 website_to_visit = 'anonymous-website'
 
@@ -106,7 +104,7 @@ texas_places = list(df[['zip', 'City', 'County Name']].itertuples(index=False, n
 zipcode, city, county = get_random_tx_place()
 city = city.lower().capitalize()
 county = county.lower().capitalize()
-print(f'{city = }, {county = }, {zipcode = }')
+# print(f'{city = }, {county = }, {zipcode = }')
 
 launch_browser()
 time.sleep(10)
