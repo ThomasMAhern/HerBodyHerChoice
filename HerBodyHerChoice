@@ -97,6 +97,36 @@ def get_random_tx_place():
     return x
 
 
+##################################
+# not sure if this is better than all functions above
+# not finished yet but want to explore
+# need to add city, state, county, zipcode into it
+# story = '//*[@id="forminator-field-textarea-1"]', ''
+# evidence = '//*[@id="forminator-field-text-1"]', ''
+# doctor = '//*[@id="forminator-field-text-6"]'
+# state = '//*[@id="forminator-field-text-3"]', 'Texas'
+# city = '//*[@id="forminator-field-text-2"]', ''
+# zipcode = '//*[@id="forminator-field-text-4"]', ''
+# county = '//*[@id="forminator-field-text-5"]', ''
+
+# submit_button = '//*[@id="recaptcha-anchor"]/div[1]'
+# elected_2_office = '//*[@id="checkbox-1"]/div/label[2]/span[1]'
+
+# # take tuples of (xpath, text) 
+# def fill_a_field(field):
+#     print(f'{field[0]} and {field[1]}')
+#     the_field = driver.find_element_by_xpath(field[0])
+#     the_field.send_keys(field[1])
+    
+# def click_sum_things(xpath_of_thing_2b_clicked):
+#     thing_2b_clicked = driver.find_element_by_xpath(xpath_of_thing_2b_clicked)
+#     thing_2b_clicked.click()
+##################################
+
+
+
+
+
 # delete all but zip, city, county columns, then save as csv
 df = pd.read_csv('zip-city-county_for_TX.csv') # https://www.downloadexcelfiles.com/us_en/download-list-zip-codes-texas-state#.YTIbpNOA7zc
 texas_places = list(df[['zip', 'City', 'County Name']].itertuples(index=False, name=None)) 
